@@ -22,10 +22,11 @@ func fieldMap(fields []sdk.ParsedTextField) map[string]string {
 
 func TestParseMediaFields(t *testing.T) {
 	dir := writeFiles(t, map[string]string{
-		"SC8125-03 - Toto - Africa.mp3":                        "",
-		"SC8125-03 - Toto - Africa.CDG":                        cdgBytes,
-		"duet/song.mp3":                                        "",
-		"duet/song.txt":                                        "#TITLE:Islands\n#ARTIST:Kenny & Dolly\n#LANGUAGE:English\n#GENRE:Country\n#BPM:100\nP1\n: 0 1 0 a\nP2\n: 2 1 0 b\nE\n",
+		"SC8125-03 - Toto - Africa.mp3": "",
+		"SC8125-03 - Toto - Africa.CDG": cdgBytes,
+		"duet/song.mp3":                 "",
+		"duet/song.txt":                 "#TITLE:Islands\n#ARTIST:Kenny & Dolly\n#LANGUAGE:English\n#GENRE:Country\n#BPM:100\nP1\n: 0 1 0 a\nP2\n: 2 1 0 b\nE\n",
+
 		"Wonderwall [Vocal Guide] (In the Style of Oasis).mp4": "",
 	})
 	cases := []struct {
