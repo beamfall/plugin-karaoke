@@ -4,19 +4,16 @@
 
 # Beamfall Karaoke
 
-**Your karaoke collection, turned into a sing-along songbook, without anything leaving your server.**
-Beamfall Karaoke is the plugin that gives [Beamfall Core](https://github.com/beamfall/core) its
-karaoke experience. Point a Beamfall library at your folder of MP3+G discs, karaoke videos,
+Beamfall Karaoke is the karaoke plugin for [Beamfall Core](https://github.com/beamfall/core). Point a Beamfall library at your folder of MP3+G discs, karaoke videos,
 UltraStar songs and LRC tracks, and Karaoke works out what each song is, who it is by, and how its
 words should light up on screen. It works offline, needs no configuration, and calls no outside
 service.
 
 It is free and open source under [AGPL-3.0](LICENSE).
 
-## What you get
+## Features
 
-- **Every common karaoke format, recognized automatically.** Each song is sorted by where its
-  words come from:
+- Each song is classified automatically by where its words come from:
 
   | Format | Files | Words |
   | --- | --- | --- |
@@ -26,33 +23,32 @@ It is free and open source under [AGPL-3.0](LICENSE).
   | LRC | audio plus an `.lrc`, or LRC text in the file's lyrics tag | line- or word-timed text |
   | Backing track | audio alone | none |
 
-- **Words that light up as you sing.** LRC and UltraStar lyrics are reduced to one timed
+- LRC and UltraStar lyrics are reduced to one timed
   timeline of lines and syllables, with the pitch of every UltraStar note and which singer each
   line belongs to, so a client can wipe words, draw a pitch guide and score the singer.
-- **Every song plays on every screen.** For a song with no picture of its own, the plugin tells
+- For a song with no picture of its own, the plugin tells
   the server how to make one: the `.cdg` graphics for CD+G, or a generated subtitle track for
   UltraStar and LRC, with lines that appear ahead of time on alternating rows, syllables that fill
   as they are sung, a different color for each duet voice, and a title card over a long intro.
-- **A songbook that reads your file names.** Disc IDs, track numbers, artists and titles come from
+- Disc IDs, track numbers, artists and titles come from
   names such as `SC8125-03 - Artist - Title`, `03 - Artist - Title` inside an `SC8125/` disc
   folder, or plain `Artist - Title`. Markers such as `(Karaoke Version)`, `[Vocal Guide]`,
   `(Duet)` and `(In the Style of Artist)` are understood and cleaned out of the title. UltraStar
   headers, the file's tags and LRC `[ti:]`/`[ar:]` tags take priority when present.
-- **Search and filter like a KJ.** Artist, disc ID, label (Sound Choice, Sunfly, Chartbuster and
+- Artist, disc ID, label (Sound Choice, Sunfly, Chartbuster and
   other well-known prefixes), language, genre, guide vocals, duets and lyric sync are all fields
   you can filter, and artist and disc ID are searchable and sortable.
-- **A home screen built for a party.** Recently Sung, Crowd Favorites, Recently Added, Surprise
+- The home screen has Recently Sung, Crowd Favorites, Recently Added, Surprise
   Me, Duets, a format filter and the full Songbook.
-- **Always from the top.** Songs never resume halfway, even videos, and clients can record a
+- Songs always start from the beginning, even videos, and clients can record a
   performance separately from a play, because a song can play to an empty room.
-- **Kind to old files.** Sidecars are decoded from UTF-8, UTF-16 with a byte-order mark, or a
+- Sidecars are decoded from UTF-8, UTF-16 with a byte-order mark, or a
   legacy Windows code page. The LRC and UltraStar readers handle the conventions found in real
   collections: repeated timestamps, offsets, instrumental breaks, translation lines, duet
   prefixes, sustained `~` notes, relative beats and comma-decimal numbers.
-- **Careful with your files.** Every sidecar read is size-bounded, the folder scan for UltraStar
-  files is capped, and the file-name, LRC and UltraStar readers are fuzz tested. A broken sidecar
-  is simply not used.
-- **English and French** labels out of the box.
+- Every sidecar read is size-bounded, the folder scan for UltraStar files is capped, and the
+  file-name, LRC and UltraStar readers are fuzz tested. A broken sidecar is ignored.
+- Labels are available in English and French.
 
 ## How it fits into Beamfall
 
@@ -80,13 +76,13 @@ The compiled code is the reading of songs:
 
 ### Not supported yet
 
-- **MIDI/KAR** songs: Beamfall plays media through FFmpeg-based pipelines with no MIDI
+- MIDI/KAR songs: Beamfall plays media through FFmpeg-based pipelines with no MIDI
   synthesizer, so a `.kar` file is not playable today.
-- **ASS/SSA karaoke subtitles** and **KaraFun `.kfn`** files as song sources.
-- **Double-byte legacy encodings** (Shift-JIS, GBK, Big5) in sidecars; they decode as
+- ASS/SSA karaoke subtitles and KaraFun `.kfn` files as song sources.
+- Double-byte legacy encodings (Shift-JIS, GBK, Big5) in sidecars; they decode as
   Windows-1252.
-- Drawing CD+G graphics, syllable wipes, pitch guides and key or tempo changes happens in the
-  Beamfall clients, not in this plugin.
+- Drawing CD+G graphics, syllable wipes, pitch guides and key or tempo changes is left to the
+  Beamfall clients.
 
 ## Develop
 
@@ -100,7 +96,7 @@ script/gate.sh fuzz    # a bounded fuzz run of the file-name, LRC and UltraStar 
 ```
 
 [`conformance_test.go`](conformance_test.go) runs the SDK's `sdktest` conformance harness against
-`Bundle()` and the parser. CI runs the same checks on every push and pull request; see
+`Bundle()` and the parser. CI runs the same checks on every pull request and every push to `main`; see
 [`.github/workflows/conformance.yml`](.github/workflows/conformance.yml).
 
 ## Acknowledgements
