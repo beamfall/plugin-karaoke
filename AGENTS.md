@@ -1,5 +1,10 @@
 # AGENTS.md
 
+## Corvint context
+
+Before editing, read `corvint context "<task>"` or `corvint impact <path>...`; before choosing tests,
+run `corvint affected --base <origin/main sha>`. **Verify:** `script/gate.sh`.
+
 ## Spec-driven changes (OpenSpec)
 
 New or changed behaviour needs an OpenSpec change in `openspec/changes/<id>/` committed before the
