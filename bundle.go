@@ -36,8 +36,8 @@ func Bundle() sdk.Bundle {
 	return sdk.Bundle{
 		ID:          PluginID,
 		Version:     "0.1.0",
-		SDKFloor:    "0.4.5",
-		SDKCeiling:  "0.4.5",
+		SDKFloor:    "0.4.6",
+		SDKCeiling:  "0.4.6",
 		DisplayName: sdk.LocaleString{"en": "Karaoke", "fr": "Karaoké"},
 		// A karaoke track is one Media — "Song" is a display label only.
 		MediaLabel:   sdk.LocaleString{"en": "Song", "fr": "Chanson"},
