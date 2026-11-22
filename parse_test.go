@@ -63,6 +63,21 @@ func TestParseMediaFields(t *testing.T) {
 				"genre": "Pop", "singers": karaoke.SingersDuet, "lyrics-sync": karaoke.SyncLine},
 		},
 		{
+			name: "label tag names the label",
+			path: "/lib/U/Velvet Static - Glass Harbor [KRG Karaoke].mp3",
+			want: map[string]string{"artist": "Velvet Static", "brand": "KRG"},
+		},
+		{
+			name: "label tag with a known abbreviation",
+			path: "/lib/Nova Rook - Paper Lanterns (SF Karaoke).mp3",
+			want: map[string]string{"artist": "Nova Rook", "brand": "Sunfly"},
+		},
+		{
+			name: "language tag names the language",
+			path: "/lib/Die Kleinen - Sommerlicht [German Karaoke].mp3",
+			want: map[string]string{"artist": "Die Kleinen", "language": "German"},
+		},
+		{
 			name: "sidecar file yields nothing",
 			path: filepath.Join(dir, "SC8125-03 - Toto - Africa.CDG"),
 			want: map[string]string{},
@@ -75,6 +90,19 @@ func TestParseMediaFields(t *testing.T) {
 				t.Fatalf("fields = %v, want %v", got, c.want)
 			}
 		})
+	}
+}
+
+func TestParseStripsLabelTagFromTitle(t *testing.T) {
+	for path, want := range map[string]string{
+		"/lib/U/Velvet Static - Glass Harbor [KRG Karaoke].mp3":            "Glass Harbor",
+		"/lib/Nova Rook - Paper Lanterns (Radio Version) [MF Karaoke].mp3": "Paper Lanterns (Radio Version)",
+		"/lib/Die Kleinen - Sommerlicht [German Karaoke].mp3":              "Sommerlicht",
+	} {
+		parsed, ok := karaoke.New().Parse(path, sdk.ParseProbe{})
+		if !ok || parsed.Title != want {
+			t.Errorf("Parse(%q).Title = %q, want %q", path, parsed.Title, want)
+		}
 	}
 }
 

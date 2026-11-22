@@ -81,6 +81,8 @@ var (
 	reLeadingTrack = regexp.MustCompile(`^(\d{1,3}) *[-.] +(.+)$`)
 	// Bracketed karaoke markers in a title or file name.
 	reMarker = regexp.MustCompile(`(?i)\s*[\(\[]\s*(karaoke(?: version)?|karaoke video|instrumental(?: version)?|with (?:lead |guide )?vocals?|vocal(?: guide)?|guide vocals?|duet(?: version)?|mp3\+?g|cdg|hd|in the style of ([^\)\]]+)|originally performed by ([^\)\]]+)|as made famous by ([^\)\]]+))\s*[\)\]]`)
+	// A label's tag: "[KRG Karaoke]", "(Sunfly Karaoke)", "[German Karaoke]".
+	reLabelTag = regexp.MustCompile(`(?i)\s*[\(\[]\s*([^\(\)\[\]]{1,24}?)\s+karaoke\s*[\)\]]`)
 	// A trailing " - Karaoke" / " - Karaoke Version".
 	reKaraokeSuffix = regexp.MustCompile(`(?i)\s+-\s+karaoke(?: version)?$`)
 )
@@ -269,11 +271,12 @@ func analyze(path string, probe sdk.ParseProbe) (song, bool) {
 	if prefix := discPrefix(s.discID); prefix != "" {
 		s.brand = knownBrands[prefix]
 	}
+	s.brand = firstNonEmpty(s.brand, marks.brand)
 
 	if s.year == 0 {
 		s.year = tagYear(firstNonEmpty(tags["date"], tags["year"], tags["originaldate"]))
 	}
-	s.language = firstNonEmpty(s.language, tags["language"])
+	s.language = firstNonEmpty(s.language, tags["language"], marks.language)
 	s.genre = firstNonEmpty(s.genre, tags["genre"])
 
 	if s.title == "" {
@@ -322,10 +325,20 @@ func fromFileName(path string) nameFacts {
 	return facts
 }
 
+// tagLanguages are label-tag words that name the song's language rather
+// than its label ("[German Karaoke]").
+var tagLanguages = map[string]bool{
+	"chinese": true, "dutch": true, "english": true, "filipino": true, "french": true,
+	"german": true, "greek": true, "hindi": true, "italian": true, "japanese": true,
+	"korean": true, "polish": true, "portuguese": true, "russian": true, "spanish": true,
+	"swedish": true, "tagalog": true, "turkish": true,
+}
+
 // markers are the facts bracketed karaoke markers carry.
 type markers struct {
-	vocals, duet bool
-	styleOf      string
+	vocals, duet    bool
+	styleOf         string
+	brand, language string
 }
 
 func (m *markers) merge(other markers) {
@@ -334,6 +347,8 @@ func (m *markers) merge(other markers) {
 	if m.styleOf == "" {
 		m.styleOf = other.styleOf
 	}
+	m.brand = firstNonEmpty(m.brand, other.brand)
+	m.language = firstNonEmpty(m.language, other.language)
 }
 
 // stripMarkers removes bracketed karaoke markers from s and reports them.
@@ -350,6 +365,16 @@ func stripMarkers(s string) (string, markers) {
 		}
 		if m.styleOf == "" {
 			m.styleOf = strings.TrimSpace(firstNonEmpty(sub[2], sub[3], sub[4]))
+		}
+		return ""
+	})
+	cleaned = reLabelTag.ReplaceAllStringFunc(cleaned, func(match string) string {
+		label := strings.TrimSpace(reLabelTag.FindStringSubmatch(match)[1])
+		switch {
+		case tagLanguages[strings.ToLower(label)]:
+			m.language = firstNonEmpty(m.language, label)
+		case m.brand == "":
+			m.brand = firstNonEmpty(knownBrands[strings.ToUpper(label)], label)
 		}
 		return ""
 	})
