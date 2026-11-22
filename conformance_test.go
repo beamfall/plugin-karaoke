@@ -53,6 +53,23 @@ E
 // cdgBytes is a whole number of 24-byte CD+G packets.
 var cdgBytes = string(make([]byte, 24*4))
 
+// A song card names its artist; a song with no artist renders no subtitle.
+func TestMediaSubtitleNamesArtist(t *testing.T) {
+	segments := karaoke.Bundle().MediaSubtitle
+	fields := map[string]string{"artist": "Juniper Static"}
+	lookup := func(name string) (string, bool) {
+		value, ok := fields[name]
+		return value, ok
+	}
+	if got := sdk.RenderMediaSubtitle(segments, "en", lookup); got != "Juniper Static" {
+		t.Fatalf("subtitle = %q, want the artist", got)
+	}
+	delete(fields, "artist")
+	if got := sdk.RenderMediaSubtitle(segments, "en", lookup); got != "" {
+		t.Fatalf("subtitle without an artist = %q, want empty", got)
+	}
+}
+
 func TestParseConformance(t *testing.T) {
 	dir := writeFiles(t, map[string]string{
 		"Queen - Bohemian Rhapsody/queen.mp3":                     "",

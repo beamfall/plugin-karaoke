@@ -56,6 +56,9 @@ func Bundle() sdk.Bundle {
 			EventKinds:  []string{PerformanceEventKind},
 		},
 		InteractiveSidecars: []string{extCDG, extLRC, extTXT},
+		// A song card names its artist under the title, so two takes of
+		// one title tell apart in the songbook and the party rotation.
+		MediaSubtitle: []sdk.LocaleString{{"en": "{artist}"}},
 		MediaFields: []sdk.FieldSpec{
 			{Name: "class", Type: "text", Filterable: true,
 				Label: sdk.LocaleString{"en": "Format", "fr": "Format"}},
