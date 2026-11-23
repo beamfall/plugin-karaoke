@@ -5,7 +5,7 @@
 ## 2. Prove
 
 - [x] 2.1 Bundle test for the icon
-- [ ] 2.2 `openspec validate --all --strict` and `script/gate.sh` pass
+- [x] 2.2 `openspec validate --all --strict` and `script/gate.sh` pass
 
 ## 3. Close
 

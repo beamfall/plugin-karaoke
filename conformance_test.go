@@ -161,3 +161,10 @@ func TestBundleDeclaresSelectPlays(t *testing.T) {
 		t.Fatal("Engagement.SelectPlays = false, want true")
 	}
 }
+
+// A karaoke Library and its artless songs draw the microphone.
+func TestBundleDeclaresMicIcon(t *testing.T) {
+	if got := karaoke.Bundle().LibraryDefaults.Icon; got != "mic" {
+		t.Fatalf("LibraryDefaults.Icon = %q, want mic", got)
+	}
+}

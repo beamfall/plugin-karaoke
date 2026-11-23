@@ -57,6 +57,8 @@ func Bundle() sdk.Bundle {
 			// A song is picked by title to sing: Select starts it.
 			SelectPlays: true,
 		},
+		// A karaoke Library and its artless songs show a microphone.
+		LibraryDefaults:     sdk.LibraryDefaults{Icon: "mic"},
 		InteractiveSidecars: []string{extCDG, extLRC, extTXT},
 		// A song card names its artist under the title, so two takes of
 		// one title tell apart in the songbook and the party rotation.
