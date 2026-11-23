@@ -154,3 +154,10 @@ func TestParseConformance(t *testing.T) {
 		},
 	})
 }
+
+// A karaoke song is picked by title to sing, so Select plays it.
+func TestBundleDeclaresSelectPlays(t *testing.T) {
+	if !karaoke.Bundle().Engagement.SelectPlays {
+		t.Fatal("Engagement.SelectPlays = false, want true")
+	}
+}

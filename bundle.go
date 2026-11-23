@@ -54,6 +54,8 @@ func Bundle() sdk.Bundle {
 		Engagement: sdk.Engagement{
 			ResumeMedia: &resume,
 			EventKinds:  []string{PerformanceEventKind},
+			// A song is picked by title to sing: Select starts it.
+			SelectPlays: true,
 		},
 		InteractiveSidecars: []string{extCDG, extLRC, extTXT},
 		// A song card names its artist under the title, so two takes of
