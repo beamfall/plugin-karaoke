@@ -58,7 +58,18 @@ func Bundle() sdk.Bundle {
 			SelectPlays: true,
 		},
 		// A karaoke Library and its artless songs show a microphone.
-		LibraryDefaults:     sdk.LibraryDefaults{Icon: "mic"},
+		LibraryDefaults: sdk.LibraryDefaults{Icon: "mic"},
+		// Karaoke offers core's party session and names its parts: singers
+		// take turns with songs on the stage screen.
+		FeatureEligibility: []string{sdk.FeatureParty},
+		PartyTerms: &sdk.PartyTerms{
+			Party:        sdk.LocaleString{"en": "Karaoke party", "fr": "Soirée karaoké"},
+			Participant:  sdk.LocaleString{"en": "Singer", "fr": "Chanteur"},
+			Participants: sdk.LocaleString{"en": "Singers", "fr": "Chanteurs"},
+			Request:      sdk.LocaleString{"en": "Song", "fr": "Chanson"},
+			Requests:     sdk.LocaleString{"en": "Songs", "fr": "Chansons"},
+			Stage:        sdk.LocaleString{"en": "Stage", "fr": "Scène"},
+		},
 		InteractiveSidecars: []string{extCDG, extLRC, extTXT},
 		// A song card names its artist under the title, so two takes of
 		// one title tell apart in the songbook and the party rotation.

@@ -3,6 +3,7 @@ package karaoke_test
 import (
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 
 	sdk "github.com/beamfall/plugin-sdk"
@@ -166,5 +167,33 @@ func TestBundleDeclaresSelectPlays(t *testing.T) {
 func TestBundleDeclaresMicIcon(t *testing.T) {
 	if got := karaoke.Bundle().LibraryDefaults.Icon; got != "mic" {
 		t.Fatalf("LibraryDefaults.Icon = %q, want mic", got)
+	}
+}
+
+// Karaoke offers core's party session.
+func TestBundleOffersParty(t *testing.T) {
+	if !slices.Contains(karaoke.Bundle().FeatureEligibility, sdk.FeatureParty) {
+		t.Fatalf("FeatureEligibility = %v, want it to contain %q", karaoke.Bundle().FeatureEligibility, sdk.FeatureParty)
+	}
+}
+
+// Every party term names its part in English and French.
+func TestBundlePartyTermsEnglishAndFrench(t *testing.T) {
+	terms := karaoke.Bundle().PartyTerms
+	if terms == nil {
+		t.Fatal("PartyTerms = nil")
+	}
+	for name, term := range map[string]sdk.LocaleString{
+		"Party": terms.Party, "Participant": terms.Participant, "Participants": terms.Participants,
+		"Request": terms.Request, "Requests": terms.Requests, "Stage": terms.Stage,
+	} {
+		for _, tag := range []string{"en", "fr"} {
+			if term[tag] == "" {
+				t.Errorf("PartyTerms.%s[%q] is empty", name, tag)
+			}
+		}
+	}
+	if got := terms.Participant["en"]; got != "Singer" {
+		t.Errorf("PartyTerms.Participant[en] = %q, want Singer", got)
 	}
 }
